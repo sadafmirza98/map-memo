@@ -45,11 +45,11 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
+  console.log("req", req);
   const createdUser = new User({
     name,
     email,
-    image: req.file.path,
+    image: req.file?.path,
     password,
     places: [],
   });
