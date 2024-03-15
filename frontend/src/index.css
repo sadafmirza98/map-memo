@@ -1,16 +1,25 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap");
 
 * {
   box-sizing: border-box;
 }
 
 html {
-  font-family: 'Doodleista', cursive;
+  font-family: "Doodleista", cursive;
 }
 
 body {
   margin: 0;
-  background: #FFD8E8;
+  background-image: url("./shared/assets/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+body {
+  -webkit-user-select: none; /* Chrome, Safari, Opera */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
 }
 
 .slide-in-left-enter {
