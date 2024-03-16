@@ -1,0 +1,9 @@
+{
+    "env": {
+        "DB_USER": "mern-stack",
+        "DB_PASSWORD": "sadaf_mirza",
+        "DB_NAME": "places",
+        "GOOGLE_API_KEY": "AIzaSyDgLmMpKCzveJf1_yuA0fUzzhy0WRChvZA",
+        "JWT_TOKEN": "supersecret_dont_share"
+    }
+}

@@ -14,14 +14,19 @@ app.use(cors()); // Set up CORS middleware
 app.use(bodyParser.json());
 
 app.use("/uploads/images", express.static(path.join("uploads", "images")));
+app.use(express.static(path.join("public")));
 
 app.use("/api/places", placesRoutes);
 app.use("/api/users", usersRoutes);
 
 app.use((req, res, next) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
+});
+
+/* app.use((req, res, next) => {
   const error = new HttpError("Could not find this route.", 404);
   next(error); // Pass error to error handling middleware
-});
+}); */
 
 app.use((error, req, res, next) => {
   if (req.file) {
@@ -35,7 +40,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://mern-stack:sadaf_mirza@gqlcluster.xcvsn.mongodb.net/places?retryWrites=true&w=majority&appName=GQLCluster",
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@gqlcluster.xcvsn.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=GQLCluster`,
     { useNewUrlParser: true, useUnifiedTopology: true } // Update connection options
   )
   .then(() => {
