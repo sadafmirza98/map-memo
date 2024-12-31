@@ -42,7 +42,7 @@ const UpdatePlace = () => {
         const responseData = await sendRequest(
           `${process.env.REACT_APP_BACKEND_URL}/users/${auth.userId}/places/${placeId}.json`
         );
-        setLoadedPlace(responseData.place);
+        setLoadedPlace(responseData);
         setFormData(
           {
             title: {
