@@ -13,10 +13,18 @@ const Users = () => {
     const fetchUsers = async () => {
       try {
         const responseData = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL + "/users"
+          process.env.REACT_APP_BACKEND_URL + "/users.json" // Ensure .json suffix
         );
 
-        setLoadedUsers(responseData.users);
+        // Map Firebase response to array if necessary
+        const usersArray = responseData
+          ? Object.keys(responseData).map((key) => ({
+              id: key,
+              ...responseData[key],
+            }))
+          : [];
+        console.log(usersArray);
+        setLoadedUsers(usersArray);
       } catch (err) {}
     };
     fetchUsers();

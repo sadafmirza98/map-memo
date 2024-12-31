@@ -7,20 +7,29 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const UserPlaces = () => {
-  const [loadedPlaces, setLoadedPlaces] = useState();
+  const [loadedPlaces, setLoadedPlaces] = useState([]);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-  const userId = useParams().userId;
+  const { userId } = useParams();
 
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
         const responseData = await sendRequest(
-          `${process.env.REACT_APP_BACKEND_URL}/places/user/${userId}`
+          `${process.env.REACT_APP_BACKEND_URL}/users/${userId}/places.json`
         );
-        setLoadedPlaces(responseData.places);
-      } catch (err) {}
+        const resultArray = Object.entries(responseData).map(
+          ([key, value]) => ({
+            id: key,
+            ...value,
+          })
+        );
+        setLoadedPlaces(resultArray || []);
+      } catch (err) {
+        console.error("Error fetching places:", err);
+      }
     };
+
     fetchPlaces();
   }, [sendRequest, userId]);
 
@@ -36,6 +45,7 @@ const UserPlaces = () => {
       {isLoading && (
         <div className="center">
           <LoadingSpinner />
+          <p>Loading user places...</p>
         </div>
       )}
       {!isLoading && loadedPlaces && (

@@ -50,13 +50,21 @@ const NewPlace = () => {
       formData.append("description", formState.inputs.description.value);
       formData.append("address", formState.inputs.address.value);
       formData.append("image", formState.inputs.image.value);
+      const placeData = {
+        title: formState.inputs.title.value,
+        description: formState.inputs.description.value,
+        address: formState.inputs.address.value,
+        creatorId: auth.userId,
+        image: formState.inputs.image.value.name,
+      };
       await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + "/places",
+        process.env.REACT_APP_BACKEND_URL + `/users/${auth.userId}/places.json`,
         "POST",
-        formData,
-        {
+        JSON.stringify(placeData),
+        { "Content-Type": "application/json" }
+        /*         {
           Authorization: "Bearer " + auth.token,
-        }
+        } */
       );
       history.push("/");
     } catch (err) {}
