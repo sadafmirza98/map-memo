@@ -63,24 +63,63 @@ const Auth = () => {
     }
     setIsLoginMode((prevMode) => !prevMode);
   };
-
   const authSubmitHandler = async (event) => {
     event.preventDefault();
 
     if (isLoginMode) {
       try {
+        // Fetch all users from the database
         const responseData = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL + "/users/login",
+          process.env.REACT_APP_BACKEND_URL + "/users.json", // GET request to fetch all users
+          "GET"
+        );
+
+        const users = [];
+        for (const key in responseData) {
+          users.push({
+            id: key,
+            ...responseData[key],
+          });
+        }
+
+        // Find user with the matching email
+        const user = users.find(
+          (u) => u.email === formState.inputs.email.value
+        );
+
+        if (!user) {
+          throw new Error("No account found with this email.");
+        }
+
+        // Validate the password
+        if (user.password !== formState.inputs.password.value) {
+          throw new Error("Invalid credentials. Please try again.");
+        }
+
+        // Successful login
+        auth.login(user.id, "dummyToken"); // Replace "dummyToken" with actual token if needed
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      try {
+        // Handle signup logic as before
+        const formData = {
+          email: formState.inputs.email.value,
+          name: formState.inputs.name.value,
+          password: formState.inputs.password.value,
+          image: formState.inputs.image.value,
+        };
+
+        const responseData = await sendRequest(
+          process.env.REACT_APP_BACKEND_URL + "/users.json", // POST to create new user
           "POST",
-          JSON.stringify({
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
+          JSON.stringify(formData),
           {
             "Content-Type": "application/json",
           }
         );
-        auth.login(responseData.userId, responseData.token);
+        /*    auth.login(responseData.userId, responseData.token);
       } catch (err) {}
     } else {
       try {
@@ -97,6 +136,11 @@ const Auth = () => {
 
         auth.login(responseData.userId, responseData.token);
       } catch (err) {}
+ */
+        auth.login(responseData.name, "dummyToken"); // Use response ID as userId
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
