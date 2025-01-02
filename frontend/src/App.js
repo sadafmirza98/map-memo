@@ -14,6 +14,7 @@ import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
+import Home from "./Home/components/Home";
 
 const App = () => {
   const { token, login, logout, userId } = useAuth();
@@ -24,6 +25,9 @@ const App = () => {
     routes = (
       <Switch>
         <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path="/users" exact>
           <Users />
         </Route>
         <Route path="/:userId/places" exact>
@@ -42,6 +46,9 @@ const App = () => {
     routes = (
       <Switch>
         <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path="/users" exact>
           <Users />
         </Route>
         <Route path="/:userId/places" exact>

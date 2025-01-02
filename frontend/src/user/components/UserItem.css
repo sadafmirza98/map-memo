@@ -2,6 +2,11 @@
   margin: 1rem;
   width: calc(45% - 2rem);
   min-width: 17.5rem;
+  transition: transform 0.3s ease; /* Add transition for smooth scaling */
+}
+
+.user-item:hover {
+  transform: scale(1.05); /* Scale the entire user-item on hover */
 }
 
 .user-item a {
@@ -12,12 +17,14 @@
   text-decoration: none;
   padding: 1rem;
   color: white;
-  background: #E7D9FF;
+  background: #e7d9ff;
+  transition: background 0.3s ease; /* Optional: smooth transition for background */
 }
 
 .user-item a:hover,
 .user-item a:active {
-  background: #FFD8E8;
+  background: #ffd8e8;
+  cursor: pointer;
 }
 
 .user-item__content {
