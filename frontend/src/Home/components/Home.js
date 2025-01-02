@@ -1,5 +1,5 @@
 import React from "react";
-import "./Home.css"; // Add corresponding CSS for styling
+import "./Home.css"; // Make sure to update the corresponding CSS for new features
 import Button from "../../shared/components/FormElements/Button";
 
 const Home = () => {
@@ -7,21 +7,17 @@ const Home = () => {
     <div className="home-container">
       {/* Hero Section */}
       <section className="hero-section fade-in-up">
-        <h1 className="hero-title">
+        <div className="hero-title text-backdrop">
           Explore the World, One Recommendation at a Time!
-        </h1>
-        <p className="hero-subtitle">
+        </div>
+        <p className="hero-subtitle text-backdrop">
           Discover hidden gems, share your favorite spots, and plan your next
           adventure.
         </p>
-        <div className="hero-buttons">
-          <Button>Start Exploring</Button>
-          <Button className="cta-button secondary">Add Your Places</Button>
-        </div>
       </section>
 
       {/* About Us Section */}
-      <section className="about-section slide-in-left">
+      <section className="about-section slide-in-left text-backdrop">
         <h2>About Us</h2>
         <p>
           Map Memo is your ultimate travel companion, where recommendations meet
@@ -29,16 +25,10 @@ const Home = () => {
           about past adventures, Map Memo brings people and places together in
           one interactive platform.
         </p>
-        <img
-          src="/assets/about-illustration.png"
-          alt="About Illustration"
-          className="about-img"
-        />
       </section>
 
       {/* Features Section */}
       <section className="features-section fade-in">
-        <h2>Features</h2>
         <div className="features-grid">
           <div className="feature-card hover-scale">
             <h3>Mood-Based Suggestions</h3>
@@ -64,6 +54,11 @@ const Home = () => {
         </p>
         <Button className="cta-button">Get Started</Button>
       </section>
+
+      {/* Floating CTA Button */}
+      <div className="floating-cta">
+        <Button className="cta-button floating">Get Started</Button>
+      </div>
     </div>
   );
 };

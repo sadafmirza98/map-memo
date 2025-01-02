@@ -12,9 +12,10 @@ html {
 
 body {
   margin: 0;
-  background-image: url("./shared/assets/background.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-image: url("./shared/assets/background.webp");
+  background-size: auto; /* Ensure no zooming or cropping */
+  background-repeat: repeat-y; /* Repeat only vertically */
+  background-position: center top; /* Start at the top-center */
 }
 
 body {
