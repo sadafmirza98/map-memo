@@ -15,6 +15,7 @@ import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import Home from "./Home/components/Home";
+import Achievements from "./achievements/components/Achievements";
 
 const App = () => {
   const { token, login, logout, userId } = useAuth();
@@ -36,8 +37,11 @@ const App = () => {
         <Route path="/places/new" exact>
           <NewPlace />
         </Route>
-        <Route path="/places/:placeId">
+        <Route path="/:userId/places/:placeId">
           <UpdatePlace />
+        </Route>
+        <Route path="/:userId/achievements">
+          <Achievements />
         </Route>
         <Redirect to="/" />
       </Switch>
@@ -53,6 +57,9 @@ const App = () => {
         </Route>
         <Route path="/:userId/places" exact>
           <UserPlaces />
+        </Route>
+        <Route path="/:userId/achievements">
+          <Achievements />
         </Route>
         <Route path="/auth">
           <Auth />
