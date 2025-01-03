@@ -7,6 +7,7 @@ const ImageUpload = (props) => {
   const [file, setFile] = useState();
   const [previewUrl, setPreviewUrl] = useState();
   const [isValid, setIsValid] = useState(false);
+  const [uploadError, setUploadError] = useState(null); // Added for debugging upload issues
 
   const filePickerRef = useRef();
 
@@ -24,38 +25,53 @@ const ImageUpload = (props) => {
   }, [file]);
 
   const pickedHandler = async (event) => {
-    if (event.target.files && event.target.files.length === 1) {
-      const pickedFile = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64Image = reader.result.split(",")[1];
-        await fetch("/.netlify/functions/saveImage", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            fileName: pickedFile.name,
-            fileContent: base64Image,
-          }),
-        });
-      };
-      reader.readAsDataURL(pickedFile);
-    }
-  };
+    let pickedFile;
+    let fileIsValid = isValid;
 
-  /* const pickedHandler = (event) => {
-  let pickedFile;
-  let fileIsValid = isValid;
-  if (event.target.files && event.target.files.length === 1) {
-    pickedFile = event.target.files[0];
-    setFile(pickedFile);
-    setIsValid(true);
-    fileIsValid = true;
-  } else {
-    setIsValid(false);
-    fileIsValid = false;
-  }
-  props.onInput?.(props.id, pickedFile, fileIsValid);
-}; */
+    if (event.target.files && event.target.files.length === 1) {
+      pickedFile = event.target.files[0];
+      setFile(pickedFile);
+      setIsValid(true);
+      fileIsValid = true;
+
+      const fileReader = new FileReader();
+      fileReader.onload = async () => {
+        try {
+          const base64Image = fileReader.result.split(",")[1];
+
+          // Check if running locally or on Netlify
+          const uploadUrl =
+            process.env.NODE_ENV === "development"
+              ? "http://localhost:8888/.netlify/functions/saveImage"
+              : "/.netlify/functions/saveImage";
+
+          const response = await fetch(uploadUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fileName: pickedFile.name,
+              fileContent: base64Image,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Image upload failed!");
+          }
+
+          console.log("Image uploaded successfully!");
+        } catch (err) {
+          console.error(err.message);
+          setUploadError(err.message);
+        }
+      };
+      fileReader.readAsDataURL(pickedFile);
+    } else {
+      setIsValid(false);
+      fileIsValid = false;
+    }
+
+    props.onInput?.(props.id, pickedFile, fileIsValid);
+  };
 
   const pickImageHandler = () => {
     filePickerRef.current.click();
@@ -66,6 +82,7 @@ const ImageUpload = (props) => {
     setPreviewUrl(null);
     setIsValid(false);
     localStorage.removeItem("uploadedImage");
+    setUploadError(null); // Clear error messages
   };
 
   useEffect(() => {
@@ -101,6 +118,7 @@ const ImageUpload = (props) => {
         )}
       </div>
       {!isValid && <p>{props.errorText}</p>}
+      {uploadError && <p className="error-text">{uploadError}</p>}
     </div>
   );
 };
