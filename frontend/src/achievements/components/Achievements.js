@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaThumbsUp,
   FaMapMarkerAlt,
@@ -71,7 +71,7 @@ const Achievements = () => {
     {
       id: "placesBadge",
       icon: <FaMapMarkerAlt />,
-      title: "10+ Places Added",
+      title: "5+ Places Added",
       description: "Add 10 or more places to unlock.",
     },
     {
