@@ -95,7 +95,7 @@ const ImageUpload = (props) => {
           PICK IMAGE
         </Button>
         {previewUrl && (
-          <Button type="button" onClick={clearImageHandler}>
+          <Button type="button ms-2" onClick={clearImageHandler}>
             CLEAR IMAGE
           </Button>
         )}
