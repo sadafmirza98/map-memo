@@ -5,12 +5,14 @@ import PlaceList from "../components/PlaceList";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { useContext } from "react";
+import { AuthContext } from "../../shared/context/auth-context";
 
 const UserPlaces = () => {
   const [loadedPlaces, setLoadedPlaces] = useState([]);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
   const { userId } = useParams();
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     const fetchPlaces = async () => {
@@ -45,11 +47,14 @@ const UserPlaces = () => {
       {isLoading && (
         <div className="center">
           <LoadingSpinner />
-          <p>Loading user places...</p>
         </div>
       )}
       {!isLoading && loadedPlaces && (
-        <PlaceList items={loadedPlaces} onDeletePlace={placeDeletedHandler} />
+        <PlaceList
+          items={loadedPlaces}
+          onDeletePlace={placeDeletedHandler}
+          currentUserId={auth.userId}
+        />
       )}
     </React.Fragment>
   );

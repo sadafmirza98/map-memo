@@ -23,7 +23,6 @@ const Users = () => {
               ...responseData[key],
             }))
           : [];
-        console.log(usersArray);
         setLoadedUsers(usersArray);
       } catch (err) {}
     };

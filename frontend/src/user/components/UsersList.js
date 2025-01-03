@@ -15,15 +15,38 @@ const UsersList = (props) => {
     );
   }
 
+  // Calculate upvotes and downvotes for each user and sort by upvotes in ascending order
+  const sortedUsers = props.items
+    .map((user) => {
+      const totalUpvotes = user.places
+        ? Object.values(user.places).reduce(
+            (sum, place) => sum + (place.upvotes || 0),
+            0
+          )
+        : 0;
+
+      const totalDownvotes = user.places
+        ? Object.values(user.places).reduce(
+            (sum, place) => sum + (place.downvotes || 0),
+            0
+          )
+        : 0;
+
+      return { ...user, totalUpvotes, totalDownvotes };
+    })
+    .sort((a, b) => a.totalUpvotes - b.totalUpvotes);
+
   return (
     <ul className="users-list">
-      {props.items.map((user) => (
+      {sortedUsers.map((user) => (
         <UserItem
           key={user.id}
           id={user.id}
           image={user.image}
           name={user.name}
-          placeCount={user.places.length}
+          placeCount={user.places ? Object.keys(user.places).length : 0}
+          totalUpvotes={user.totalUpvotes}
+          totalDownvotes={user.totalDownvotes}
         />
       ))}
     </ul>

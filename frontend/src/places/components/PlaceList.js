@@ -29,6 +29,10 @@ const PlaceList = (props) => {
           address={place.address}
           creatorId={place.creatorId}
           coordinates={place.location}
+          upvotes={place.upvotes}
+          downvotes={place.downvotes}
+          votedUsers={place.votedUsers}
+          currentUserId={props.currentUserId}
           onDelete={props.onDeletePlace}
         />
       ))}

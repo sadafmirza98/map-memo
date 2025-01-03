@@ -54,3 +54,21 @@
 .user-item__info h3 {
   margin: 0;
 }
+
+.user-item__votes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.user-item__votes img {
+  width: 20px;
+  height: 20px;
+}
+
+.user-item__votes span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
