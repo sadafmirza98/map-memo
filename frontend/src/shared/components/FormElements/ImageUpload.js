@@ -17,28 +17,64 @@ const ImageUpload = (props) => {
     const fileReader = new FileReader();
     fileReader.onload = () => {
       setPreviewUrl(fileReader.result);
+      // Save the file preview to localStorage
+      localStorage.setItem("uploadedImage", fileReader.result);
     };
     fileReader.readAsDataURL(file);
   }, [file]);
 
-  const pickedHandler = (event) => {
-    let pickedFile;
-    let fileIsValid = isValid;
+  const pickedHandler = async (event) => {
     if (event.target.files && event.target.files.length === 1) {
-      pickedFile = event.target.files[0];
-      setFile(pickedFile);
-      setIsValid(true);
-      fileIsValid = true;
-    } else {
-      setIsValid(false);
-      fileIsValid = false;
+      const pickedFile = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64Image = reader.result.split(",")[1];
+        await fetch("/.netlify/functions/saveImage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileName: pickedFile.name,
+            fileContent: base64Image,
+          }),
+        });
+      };
+      reader.readAsDataURL(pickedFile);
     }
-    props.onInput(props.id, pickedFile, fileIsValid);
   };
+
+  /* const pickedHandler = (event) => {
+  let pickedFile;
+  let fileIsValid = isValid;
+  if (event.target.files && event.target.files.length === 1) {
+    pickedFile = event.target.files[0];
+    setFile(pickedFile);
+    setIsValid(true);
+    fileIsValid = true;
+  } else {
+    setIsValid(false);
+    fileIsValid = false;
+  }
+  props.onInput?.(props.id, pickedFile, fileIsValid);
+}; */
 
   const pickImageHandler = () => {
     filePickerRef.current.click();
   };
+
+  const clearImageHandler = () => {
+    setFile(null);
+    setPreviewUrl(null);
+    setIsValid(false);
+    localStorage.removeItem("uploadedImage");
+  };
+
+  useEffect(() => {
+    // Load image from localStorage if available
+    const storedImage = localStorage.getItem("uploadedImage");
+    if (storedImage) {
+      setPreviewUrl(storedImage);
+    }
+  }, []);
 
   return (
     <div className="form-control">
@@ -58,6 +94,11 @@ const ImageUpload = (props) => {
         <Button type="button" onClick={pickImageHandler}>
           PICK IMAGE
         </Button>
+        {previewUrl && (
+          <Button type="button" onClick={clearImageHandler}>
+            CLEAR IMAGE
+          </Button>
+        )}
       </div>
       {!isValid && <p>{props.errorText}</p>}
     </div>
