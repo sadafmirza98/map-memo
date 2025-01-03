@@ -26,6 +26,8 @@ exports.handler = async (event) => {
       };
     }
 
+    console.log("Request body:", event.body); // Log the request body
+
     const { fileName, fileContent } = JSON.parse(event.body);
 
     if (!fileName || !fileContent) {
@@ -33,10 +35,23 @@ exports.handler = async (event) => {
     }
 
     const fileBuffer = Buffer.from(fileContent, "base64");
-    const tempFilePath = path.join("/tmp", fileName);
+
+    // Resolve the correct path for the temp folder
+    const tempDir = path.resolve(__dirname, "temp");
+
+    console.log("Saving to directory:", tempDir); // Log the directory path
+
+    // Ensure the temp directory exists when running locally
+    if (!fs.existsSync(tempDir)) {
+      console.log("Creating temp directory...");
+      fs.mkdirSync(tempDir); // Make sure this directory exists before writing to it
+    }
+
+    const tempFilePath = path.join(tempDir, fileName); // Save to the local 'temp' folder
+
     fs.writeFileSync(tempFilePath, fileBuffer);
 
-    console.log(`File successfully saved at: ${tempFilePath}`);
+    console.log(`File successfully saved at: ${tempFilePath}`); // Log the saved file path
 
     return {
       statusCode: 200,

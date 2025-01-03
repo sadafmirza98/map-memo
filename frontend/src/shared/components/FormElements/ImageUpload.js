@@ -8,6 +8,7 @@ const ImageUpload = (props) => {
   const [previewUrl, setPreviewUrl] = useState();
   const [isValid, setIsValid] = useState(false);
   const [uploadError, setUploadError] = useState(null); // Added for debugging upload issues
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
   const filePickerRef = useRef();
 
@@ -27,6 +28,19 @@ const ImageUpload = (props) => {
   const pickedHandler = async (event) => {
     if (event.target.files && event.target.files.length === 1) {
       const pickedFile = event.target.files[0];
+
+      // Validate file type and size
+      if (!["image/jpeg", "image/png", "image/jpg"].includes(pickedFile.type)) {
+        setUploadError(
+          "Invalid file type. Only JPEG, PNG, and JPG are allowed."
+        );
+        return;
+      }
+      if (pickedFile.size > MAX_FILE_SIZE) {
+        setUploadError("File size is too large!");
+        return;
+      }
+
       setFile(pickedFile);
       setIsValid(true);
 
