@@ -78,7 +78,7 @@ const PlaceItem = (props) => {
 
     try {
       await sendRequest(
-        `${process.env.REACT_APP_BACKEND_URL}/places/${props.id}.json`,
+        `${process.env.REACT_APP_BACKEND_URL}/users/${auth.userId}/places/${props.id}.json`,
         "PATCH",
         JSON.stringify({
           upvotes: updatedUpvotes,

@@ -72,7 +72,7 @@ const Achievements = () => {
       id: "placesBadge",
       icon: <FaMapMarkerAlt />,
       title: "5+ Places Added",
-      description: "Add 10 or more places to unlock.",
+      description: "Add 5 or more places to unlock.",
     },
     {
       id: "upvoteBadge",
