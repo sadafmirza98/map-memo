@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
@@ -14,12 +13,14 @@ import {
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import uploadImageToGitHub from "../../uploadImageToGitHub"; // Import the function for image upload
 import "./Auth.css";
 
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [imageUrl, setImageUrl] = useState(null); // Store the image URL here
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -63,6 +64,7 @@ const Auth = () => {
     }
     setIsLoginMode((prevMode) => !prevMode);
   };
+
   const authSubmitHandler = async (event) => {
     event.preventDefault();
 
@@ -108,7 +110,7 @@ const Auth = () => {
           email: formState.inputs.email.value,
           name: formState.inputs.name.value,
           password: formState.inputs.password.value,
-          image: formState.inputs.image.value,
+          image: imageUrl, // Save the uploaded image URL
         };
 
         const responseData = await sendRequest(
@@ -119,28 +121,24 @@ const Auth = () => {
             "Content-Type": "application/json",
           }
         );
-        /*    auth.login(responseData.userId, responseData.token);
-      } catch (err) {}
-    } else {
-      try {
-        const formData = new FormData();
-        formData.append("email", formState.inputs.email.value);
-        formData.append("name", formState.inputs.name.value);
-        formData.append("password", formState.inputs.password.value);
-        formData.append("image", formState.inputs.image.value);
-        const responseData = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL + "/users/signup",
-          "POST",
-          formData
-        );
 
-        auth.login(responseData.userId, responseData.token);
-      } catch (err) {}
- */
-        auth.login(responseData.name, "dummyToken"); // Use response ID as userId
+        // Successful signup
+        auth.login(responseData.name, "dummyToken"); // Replace "dummyToken" with actual token if needed
       } catch (err) {
         console.error(err);
       }
+    }
+  };
+
+  const handleImageUpload = async (file) => {
+    try {
+      const fileName = file.name; // Use the picked file's name
+      const fileUrl = await uploadImageToGitHub(file, fileName);
+      if (fileUrl) {
+        setImageUrl(fileUrl); // Store the uploaded image URL
+      }
+    } catch (error) {
+      console.error("Upload error:", error.message);
     }
   };
 
@@ -167,7 +165,7 @@ const Auth = () => {
             <ImageUpload
               center
               id="image"
-              onInput={inputHandler}
+              onInput={handleImageUpload} // Pass the handleImageUpload function
               errorText="Please provide an image."
             />
           )}

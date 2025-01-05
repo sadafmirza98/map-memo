@@ -56,7 +56,7 @@ const ImageUpload = (props) => {
           console.log("Uploaded File URL:", fileUrl);
         }
       } catch (error) {
-        setUploadError("Failed to upload image to GitHub");
+        setUploadError("Failed to upload image");
         console.error("Upload error:", error.message);
       }
     } else {
@@ -77,14 +77,6 @@ const ImageUpload = (props) => {
     setUploadError(null);
     setUploadSuccess(null);
   };
-
-  useEffect(() => {
-    // Load image from localStorage if available
-    const storedImage = localStorage.getItem("uploadedImage");
-    if (storedImage) {
-      setPreviewUrl(storedImage);
-    }
-  }, []);
 
   return (
     <div className="form-control">
