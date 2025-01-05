@@ -9,6 +9,7 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import upvoteIcon from "../../shared/assets/upvote-icon.svg";
 import downvoteIcon from "../../shared/assets/downvote-icon.svg";
+import axios from "axios";
 //import Map from '../../shared/components/UIElements/Map';
 import "./PlaceItem.css";
 
@@ -33,17 +34,46 @@ const PlaceItem = (props) => {
   };
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
+
+    // Construct the GitHub file URL and retrieve SHA
+    const githubFileUrl = `https://api.github.com/repos/${process.env.REACT_APP_GITHUB_REPO}/contents/${props.image}`;
     try {
+      // Step 1: Get the SHA of the file to delete
+      const { data } = await axios.get(githubFileUrl, {
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
+        },
+      });
+      const sha = data.sha;
+
+      // Step 2: Delete the image from GitHub
+      await axios.delete(githubFileUrl, {
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
+        },
+        data: {
+          message: `Delete image ${props.image}`,
+          sha: sha,
+          branch: process.env.REACT_APP_GITHUB_BRANCH,
+        },
+      });
+
+      console.log("Image deleted from GitHub:", props.image);
+
+      // Step 3: Delete the place from the database
       await sendRequest(
         `${process.env.REACT_APP_BACKEND_URL}/users/${auth.userId}/places/${props.id}.json`,
         "DELETE",
         null
-        /*         {
-          Authorization: "Bearer " + auth.token,
-        } */
       );
+
       props.onDelete(props.id);
-    } catch (err) {}
+    } catch (err) {
+      console.error(
+        "Error deleting image or place:",
+        err.response?.data || err.message
+      );
+    }
   };
 
   const handleUpvote = async () => {

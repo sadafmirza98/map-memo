@@ -1,9 +1,8 @@
 import axios from "axios";
 
-const GITHUB_REPO = "sadafmirza98/image-uploads"; // Replace with your repo
-const GITHUB_TOKEN =
-  "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"; // Replace with your token
-const BRANCH = "main";
+const GITHUB_REPO = process.env.REACT_APP_GITHUB_REPO; // Replace with your repo
+const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+const BRANCH = process.env.REACT_APP_GITHUB_BRANCH;
 
 const uploadImageToGitHub = async (file, fileName) => {
   const base64File = await toBase64(file);
