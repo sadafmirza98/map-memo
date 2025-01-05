@@ -148,7 +148,9 @@ const PlaceItem = (props) => {
               VIEW ON MAP
             </Button>
             {auth.userId === props.creatorId && (
-              <Button to={`/places/${props.id}`}>EDIT</Button>
+              <Button to={`/users/${auth.userId}/places/${props.id}`}>
+                EDIT
+              </Button>
             )}
             {auth.userId === props.creatorId && (
               <Button danger onClick={showDeleteWarningHandler}>
