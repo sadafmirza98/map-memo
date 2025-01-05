@@ -1,13 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
-
 import Button from "./Button";
 import "./ImageUpload.css";
+import uploadImageToGitHub from "../../../uploadImageToGitHub"; // Import the function
 
 const ImageUpload = (props) => {
   const [file, setFile] = useState();
   const [previewUrl, setPreviewUrl] = useState();
   const [isValid, setIsValid] = useState(false);
-  const [uploadError, setUploadError] = useState(null); // Added for debugging upload issues
+  const [uploadError, setUploadError] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(null);
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
   const filePickerRef = useRef();
@@ -44,38 +45,23 @@ const ImageUpload = (props) => {
       setFile(pickedFile);
       setIsValid(true);
 
-      const reader = new FileReader();
-      reader.onload = async () => {
-        try {
-          const base64Image = reader.result.split(",")[1];
-          const uploadUrl =
-            process.env.NODE_ENV === "development"
-              ? "http://localhost:8888/.netlify/functions/saveImage"
-              : "/.netlify/functions/saveImage";
+      props.onInput(props.id, pickedFile, true); // Pass the file and isValid=true
 
-          const response = await fetch(uploadUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              fileName: pickedFile.name,
-              fileContent: base64Image,
-            }),
-          });
+      try {
+        const fileName = pickedFile.name; // Use the picked file's name
+        const fileUrl = await uploadImageToGitHub(pickedFile, fileName);
 
-          if (!response.ok) {
-            throw new Error("Image upload failed!");
-          }
-
-          const data = await response.json();
-          console.log("Upload success:", data);
-        } catch (error) {
-          console.error("Upload error:", error.message);
-          setUploadError(error.message);
+        if (fileUrl) {
+          setUploadSuccess("Image uploaded successfully!");
+          console.log("Uploaded File URL:", fileUrl);
         }
-      };
-      reader.readAsDataURL(pickedFile);
+      } catch (error) {
+        setUploadError("Failed to upload image to GitHub");
+        console.error("Upload error:", error.message);
+      }
     } else {
       setIsValid(false);
+      props.onInput(props.id, null, false); // Handle invalid input
     }
   };
 
@@ -88,7 +74,8 @@ const ImageUpload = (props) => {
     setPreviewUrl(null);
     setIsValid(false);
     localStorage.removeItem("uploadedImage");
-    setUploadError(null); // Clear error messages
+    setUploadError(null);
+    setUploadSuccess(null);
   };
 
   useEffect(() => {
@@ -125,6 +112,7 @@ const ImageUpload = (props) => {
       </div>
       {!isValid && <p>{props.errorText}</p>}
       {uploadError && <p className="error-text">{uploadError}</p>}
+      {uploadSuccess && <p className="success-text">{uploadSuccess}</p>}
     </div>
   );
 };
