@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTrophy, FaStar } from "react-icons/fa"; // Importing icons for badges
+import { FaStar, FaMapMarkerAlt } from "react-icons/fa";
 import UserItem from "./UserItem";
 import Card from "../../shared/components/UIElements/Card";
 import "./UsersList.css";
@@ -17,31 +17,25 @@ const UsersList = (props) => {
     );
   }
 
-  // Helper function to calculate badges for a user
   const getBadges = (user) => {
     const badges = [];
-    // Badge for adding 10+ places
-    if (user.placeCount >= 1) {
+    if (user.placeCount >= 5) {
       badges.push({
         id: "placesBadge",
-        icon: <FaTrophy />,
-        title: "10+ Places Added",
+        icon: <FaMapMarkerAlt />,
+        title: "5+ Places Added",
       });
     }
-
-    // Badge for receiving 50+ upvotes
-    if (user.totalUpvotes >= 50) {
+    if (user.totalUpvotes >= 10) {
       badges.push({
         id: "upvoteBadge",
         icon: <FaStar />,
-        title: "50+ Upvotes",
+        title: "10+ Upvotes",
       });
     }
-
     return badges;
   };
 
-  // Prepare user data and calculate derived values
   const usersWithStats = props.items.map((user) => {
     const totalUpvotes = user.places
       ? Object.values(user.places).reduce(
@@ -67,20 +61,16 @@ const UsersList = (props) => {
     };
   });
 
-  // Sort users in descending order by total upvotes
   const sortedUsers = usersWithStats.sort(
     (a, b) => b.totalUpvotes - a.totalUpvotes
   );
 
-  // Base URL for images stored in GitHub
   const imageBaseUrl = `https://github.com/${GITHUB_REPO}/raw/main/uploads/profile`;
 
   return (
     <ul className="users-list">
       {sortedUsers.map((user) => {
-        const badges = getBadges(user); // Get badges for each user
-
-        // Construct the image URL from the file name, including the user ID in the path
+        const badges = getBadges(user);
         const imageUrl = `${imageBaseUrl}/${user.image}`;
         return (
           <UserItem
@@ -91,20 +81,8 @@ const UsersList = (props) => {
             placeCount={user.placeCount}
             totalUpvotes={user.totalUpvotes}
             totalDownvotes={user.totalDownvotes}
-          >
-            <div className="user-badges">
-              {badges.map((badge) => (
-                <div
-                  key={badge.id}
-                  className="badge unlocked"
-                  title={badge.title}
-                >
-                  <div className="badge-icon">{badge.icon}</div>
-                  <span>{badge.title}</span>
-                </div>
-              ))}
-            </div>
-          </UserItem>
+            badges={badges} // Pass the badges prop
+          />
         );
       })}
     </ul>

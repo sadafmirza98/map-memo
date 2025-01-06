@@ -11,6 +11,19 @@ const UserItem = (props) => {
   return (
     <li className="user-item">
       <Card className="user-item__content">
+        <div className="user-item__badges">
+          {props.badges.map((badge) => (
+            <div
+              key={badge.id}
+              className={`user-badge ${
+                badge.unlocked ? "user-badge--unlocked" : ""
+              }`}
+              title={badge.title}
+            >
+              <div className="user-badge__icon">{badge.icon}</div>
+            </div>
+          ))}
+        </div>
         <Link to={`/${props.id}/places`}>
           <div className="user-item__image">
             <Avatar image={`${props.image}`} alt={props.name} />

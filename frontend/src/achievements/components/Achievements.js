@@ -54,8 +54,8 @@ const Achievements = () => {
       );
 
       // Achievements
-      if (Object.keys(places).length >= 10) badges.push("placesBadge");
-      if (totalUpvotes >= 50) badges.push("upvoteBadge");
+      if (Object.keys(places).length >= 5) badges.push("placesBadge");
+      if (totalUpvotes >= 10) badges.push("upvoteBadge");
       if (uniqueRegions.size >= 3) badges.push("explorerBadge");
       if (totalUpvotes >= 100) badges.push("superUpvoteBadge");
       if (Object.keys(places).length >= 20) badges.push("masterPlacesBadge");
@@ -77,8 +77,8 @@ const Achievements = () => {
     {
       id: "upvoteBadge",
       icon: <FaThumbsUp />,
-      title: "50+ Upvotes",
-      description: "Get 50 or more upvotes to unlock.",
+      title: "10+ Upvotes",
+      description: "Get 10 or more upvotes to unlock.",
     },
     {
       id: "explorerBadge",

@@ -1,14 +1,12 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useContext } from "react";
-import Card from "../../shared/components/UIElements/Card";
+import { BiUpvote, BiDownvote } from "react-icons/bi"; // Import icons from React Icons
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
+import Card from "../../shared/components/UIElements/Card";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import upvoteIcon from "../../shared/assets/upvote-icon.svg";
-import downvoteIcon from "../../shared/assets/downvote-icon.svg";
 import axios from "axios";
 //import Map from '../../shared/components/UIElements/Map';
 import "./PlaceItem.css";
@@ -18,7 +16,7 @@ const PlaceItem = (props) => {
   const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const openMapHandler = () => setShowMap(true);
+  //const openMapHandler = () => setShowMap(true);
   const closeMapHandler = () => setShowMap(false);
 
   const [upvotes, setUpvotes] = useState(props.upvotes || 0);
@@ -186,23 +184,23 @@ const PlaceItem = (props) => {
             )}
             {auth.isLoggedIn && (
               <div className="vote-controls">
-                <img
-                  src={upvoteIcon}
-                  alt="Upvote"
-                  className={`vote-icon ${
-                    userVote === "upvote" ? "active" : ""
+                <div
+                  className={`vote-badge ${
+                    userVote === "upvote" ? "active-upvote" : ""
                   }`}
                   onClick={handleUpvote}
-                />
+                >
+                  <BiUpvote />
+                </div>
                 <span>{upvotes}</span>
-                <img
-                  src={downvoteIcon}
-                  alt="Downvote"
-                  className={`vote-icon ${
-                    userVote === "downvote" ? "active" : ""
+                <div
+                  className={`vote-badge ${
+                    userVote === "downvote" ? "active-downvote" : ""
                   }`}
                   onClick={handleDownvote}
-                />
+                >
+                  <BiDownvote />
+                </div>
                 <span>{downvotes}</span>
               </div>
             )}
