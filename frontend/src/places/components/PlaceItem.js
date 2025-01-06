@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { BiUpvote, BiDownvote } from "react-icons/bi"; // Import icons from React Icons
+import { BiUpvote, BiDownvote } from "react-icons/bi";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 import Card from "../../shared/components/UIElements/Card";
@@ -8,16 +8,12 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import axios from "axios";
-//import Map from '../../shared/components/UIElements/Map';
 import "./PlaceItem.css";
 
 const PlaceItem = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
-  const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  //const openMapHandler = () => setShowMap(true);
-  const closeMapHandler = () => setShowMap(false);
 
   const [upvotes, setUpvotes] = useState(props.upvotes || 0);
   const [downvotes, setDownvotes] = useState(props.downvotes || 0);
@@ -125,18 +121,6 @@ const PlaceItem = (props) => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       <Modal
-        show={showMap}
-        onCancel={closeMapHandler}
-        header={props.address}
-        contentClass="place-item__modal-content"
-        footerClass="place-item__modal-actions"
-        footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
-      >
-        <div className="map-container">
-          {/*  <Map center={props.coordinates} zoom={16} /> */}
-        </div>
-      </Modal>
-      <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
         header="Are you sure?"
@@ -169,9 +153,21 @@ const PlaceItem = (props) => {
             <p>{props.description}</p>
           </div>
           <div className="place-item__actions">
-            <Button inverse onClick={() => {}}>
+            <Button
+              inverse
+              onClick={() => {
+                const location = props.address;
+                window.open(
+                  `https://www.google.com/maps/search/?q=${encodeURIComponent(
+                    location
+                  )}`,
+                  "_blank"
+                );
+              }}
+            >
               VIEW ON MAP
             </Button>
+
             {auth.userId === props.creatorId && (
               <Button to={`/users/${auth.userId}/places/${props.id}`}>
                 EDIT
