@@ -36,7 +36,7 @@
 .badge {
   background: linear-gradient(135deg, #ffb6d1, #d6a5d6);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1rem;
   text-align: center;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
