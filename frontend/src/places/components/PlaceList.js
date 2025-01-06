@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import Card from "../../shared/components/UIElements/Card";
 import PlaceItem from "./PlaceItem";
 import Button from "../../shared/components/FormElements/Button";
 import "./PlaceList.css";
+import { AuthContext } from "../../shared/context/auth-context";
+const GITHUB_REPO = process.env.REACT_APP_GITHUB_REPO;
 
 const PlaceList = (props) => {
+  const auth = useContext(AuthContext);
   if (props.items.length === 0) {
     return (
       <div className="place-list center">
@@ -17,25 +20,30 @@ const PlaceList = (props) => {
     );
   }
 
+  const imageBaseUrl = `https://github.com/${GITHUB_REPO}/raw/main/uploads/${auth.userId}`;
+
   return (
     <ul className="place-list">
-      {props.items.map((place) => (
-        <PlaceItem
-          key={place.id}
-          id={place.id}
-          image={place.image}
-          title={place.title}
-          description={place.description}
-          address={place.address}
-          creatorId={place.creatorId}
-          coordinates={place.location}
-          upvotes={place.upvotes}
-          downvotes={place.downvotes}
-          votedUsers={place.votedUsers}
-          currentUserId={props.currentUserId}
-          onDelete={props.onDeletePlace}
-        />
-      ))}
+      {props.items.map((place) => {
+        const imageUrl = `${imageBaseUrl}/${place.image}`; // Construct the image URL for each place
+        return (
+          <PlaceItem
+            key={place.id}
+            id={place.id}
+            image={imageUrl}
+            title={place.title}
+            description={place.description}
+            address={place.address}
+            creatorId={place.creatorId}
+            coordinates={place.location}
+            upvotes={place.upvotes}
+            downvotes={place.downvotes}
+            votedUsers={place.votedUsers}
+            currentUserId={props.currentUserId}
+            onDelete={props.onDeletePlace}
+          />
+        );
+      })}
     </ul>
   );
 };
