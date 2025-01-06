@@ -4,6 +4,8 @@ import UserItem from "./UserItem";
 import Card from "../../shared/components/UIElements/Card";
 import "./UsersList.css";
 
+const GITHUB_REPO = process.env.REACT_APP_GITHUB_REPO;
+
 const UsersList = (props) => {
   if (props.items.length === 0) {
     return (
@@ -18,7 +20,6 @@ const UsersList = (props) => {
   // Helper function to calculate badges for a user
   const getBadges = (user) => {
     const badges = [];
-    console.log(user);
     // Badge for adding 10+ places
     if (user.placeCount >= 1) {
       badges.push({
@@ -71,16 +72,21 @@ const UsersList = (props) => {
     (a, b) => b.totalUpvotes - a.totalUpvotes
   );
 
+  // Base URL for images stored in GitHub
+  const imageBaseUrl = `https://github.com/${GITHUB_REPO}/raw/main/uploads/profile`;
+
   return (
     <ul className="users-list">
       {sortedUsers.map((user) => {
         const badges = getBadges(user); // Get badges for each user
-        console.log("badge", badges);
+
+        // Construct the image URL from the file name, including the user ID in the path
+        const imageUrl = `${imageBaseUrl}/${user.image}`;
         return (
           <UserItem
             key={user.id}
             id={user.id}
-            image={user.image}
+            image={imageUrl}
             name={user.name}
             placeCount={user.placeCount}
             totalUpvotes={user.totalUpvotes}

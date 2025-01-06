@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
-
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
@@ -62,12 +61,11 @@ const NewPlace = () => {
         "POST",
         JSON.stringify(placeData),
         { "Content-Type": "application/json" }
-        /*         {
-          Authorization: "Bearer " + auth.token,
-        } */
       );
       history.push("/");
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -104,6 +102,7 @@ const NewPlace = () => {
           id="image"
           onInput={inputHandler}
           errorText="Please provide an image."
+          userId={auth.userId}
         />
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE

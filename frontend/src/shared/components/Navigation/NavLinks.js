@@ -1,11 +1,16 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom";
-
+import { NavLink, useHistory } from "react-router-dom"; // Use useHistory here
 import { AuthContext } from "../../context/auth-context";
 import "./NavLinks.css";
 
 const NavLinks = () => {
   const auth = useContext(AuthContext);
+  const history = useHistory();
+
+  const logoutHandler = () => {
+    auth.logout();
+    history.push("/auth");
+  };
 
   return (
     <ul className="nav-links">
@@ -41,7 +46,7 @@ const NavLinks = () => {
       )}
       {auth.isLoggedIn && (
         <li>
-          <button onClick={auth.logout}>LOGOUT</button>
+          <button onClick={logoutHandler}>LOGOUT</button>
         </li>
       )}
     </ul>

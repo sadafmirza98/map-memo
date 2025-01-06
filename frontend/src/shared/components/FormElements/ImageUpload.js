@@ -27,6 +27,8 @@ const ImageUpload = (props) => {
   }, [file]);
 
   const pickedHandler = async (event) => {
+    setUploadError(null); // Reset previous upload errors
+    setUploadSuccess(null); // Reset previous success message
     if (event.target.files && event.target.files.length === 1) {
       const pickedFile = event.target.files[0];
 
@@ -44,12 +46,13 @@ const ImageUpload = (props) => {
 
       setFile(pickedFile);
       setIsValid(true);
-
       props.onInput(props.id, pickedFile, true); // Pass the file and isValid=true
-
       try {
-        const fileName = pickedFile.name; // Use the picked file's name
-        const fileUrl = await uploadImageToGitHub(pickedFile, fileName);
+        const fileUrl = await uploadImageToGitHub(
+          pickedFile,
+          pickedFile.name,
+          props.userId
+        );
 
         if (fileUrl) {
           setUploadSuccess("Image uploaded successfully!");

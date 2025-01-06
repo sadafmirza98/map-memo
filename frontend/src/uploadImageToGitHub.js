@@ -4,13 +4,14 @@ const GITHUB_REPO = process.env.REACT_APP_GITHUB_REPO; // Replace with your repo
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 const BRANCH = process.env.REACT_APP_GITHUB_BRANCH;
 
-const uploadImageToGitHub = async (file, fileName) => {
+const uploadImageToGitHub = async (file, fileName, userId) => {
   const base64File = await toBase64(file);
-  const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`;
+  const filePath = `uploads/${userId}/${fileName}`; // Use userId as folder
+
+  const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`;
   let sha = null;
 
   try {
-    // Step 1: Check if the file exists
     try {
       const existingFileResponse = await axios.get(url, {
         headers: {
@@ -59,6 +60,9 @@ const uploadImageToGitHub = async (file, fileName) => {
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
+    if (!(file instanceof Blob)) {
+      return reject(new Error("The provided file is not a Blob."));
+    }
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result.split(",")[1]);
